@@ -1,0 +1,161 @@
+/*general*/
+  body{
+    margin:0;
+  }
+  div{
+    background:white; /*per pantalla completa, sinó surt negre*/
+  }
+  th{
+    background:#eee;
+    font-weight:normal;
+    font-size:smaller;
+    border:1px solid;
+  }
+  td{
+    text-align:center;
+    padding:0px;
+    border:1px solid;
+  }
+  button {
+    display:block;
+    font-family:monospace;
+    font-size:smaller;
+    width:100%;
+    height:100%;
+    border-radius:0;
+    border-width:1px;
+    /*box-shadow:inset 0 0 3px #666;*/
+  }
+
+/*classes*/
+  .flex{
+    display:flex;
+    flex-wrap:wrap;
+  }
+
+/*elements with id*/
+  /*taula equips*/
+    table#app {
+      border-collapse:collapse;
+      width:100%;
+      background:white;
+    }
+    tbody#Locals    .nom input.nom { background:lightyellow; }
+    tbody#Visitants .nom input.nom { background:azure; }
+    tr.jugador.seleccionat th,
+    tr.jugador.seleccionat td,
+    tr.jugador.seleccionat input,
+    tr.jugador.seleccionat div {
+      color:blue;
+      background:lightblue;
+    }
+
+    tr.jugador[jugador_menu_faltes_visible] div,
+    tr.jugador[jugador_menu_corregir_faltes_visible] div,
+    tr.jugador[jugador_menu_assistencies] div,
+    tr.jugador[jugador_menu_rebots_visible_t1] div,
+    tr.jugador[jugador_menu_rebots_visible_t2] div,
+    tr.jugador[jugador_menu_rebots_visible_t3] div
+    {
+      background:orange;
+    }
+
+    td.nom {
+      text-align:left;
+      width:10em;
+    }
+    td.nom div.nom_container {
+      display:flex;
+    }
+    td.nom input.nom{
+      display:block;
+      text-align:right;
+      width:100%;
+    }
+    div.tirs {
+      display:grid;
+      grid-template-columns:40% 20% 40%;
+    }
+    div.tirs div.compta, div.tirs div.corregir {
+      display:grid;
+      grid-template-columns:63% 37%;
+    }
+    div.tirs button.comptar.dins{   background:lime; }
+    div.tirs button.comptar.intent{ background:red;  font-size:smaller;}
+    div.altres {
+      display:grid;
+      grid-template-columns:50% 20% 30%;
+      height:100%;
+    }
+    div.menu_flotant {
+      position:absolute;
+      background:white;
+      box-shadow:3px 3px 20px black;
+    }
+    div.menu_flotant button.jugador_menu_flotant {
+      background:white;
+      text-align:left;
+      height:2.5em;
+    }
+    div.menu_flotant button[seleccionat] {
+      background:lightblue !important;
+    }
+    div.menu_rebots {
+      display:grid;
+      grid-template-columns:50% 50%;
+      width:25em;
+    }
+    div.menu_assistencia  div.company_assistit {
+      display:grid;
+      grid-template-columns:25% 25% 50%;
+      width:25em;
+    }
+    div.menu_assistencia  div.company_assistit div.nom {
+      font-size:smaller;
+      text-align:left;
+      vertical-align:middle;
+      background:white;
+      border-bottom:1px solid;
+      padding-left:1px;
+    }
+    div.menu_assistencia  div.company_assistit button {
+      text-align:center;
+      background:lime;
+    }
+
+    div.faltes {
+      display:grid;
+      /*(1)falta feta, (2)corregir falta feta, (3)indicador, (4)fata rebuda, (5)corregir falta rebuda*/
+      grid-template-columns:25% 15% 20% 25% 15%;
+      height:100%;
+    }
+
+  /*botons utils*/
+    ul#utils{
+      list-style-type:none;
+      padding:0;
+      margin:0;
+      margin-top:1em;
+      display:grid;
+      grid-template-columns:20% 20% 20%;
+      grid-gap:1px;
+    }
+    ul#utils button{
+      height:3em;
+      border-radius:5px;
+    }
+    kbd {
+      display: inline-block;
+      margin: 0 .1em;
+      padding: .1em .6em;
+      font-family: monospace,Arial,"Helvetica Neue",Helvetica,sans-serif;
+      font-size: 11px;
+      line-height: 1.4;
+      color: #242729;
+      text-shadow: 0 1px 0 #FFF;
+      background-color: #e1e3e5;
+      border: 1px solid #adb3b9;
+      border-radius: 3px;
+      box-shadow: 0 1px 0 rgba(12,13,14,0.2), 0 0 0 2px #FFF inset;
+      white-space: nowrap;
+    }

@@ -1,0 +1,645 @@
+<!doctype html><html><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="stylesheet" href="css.css">
+  <title>stats live</title>
+
+  <!--model app-->
+  <script src="jugador.js"></script><!--classe jugador-->
+  <script src="tweet/tweet.js"></script>
+  <script src="log.js"></script><!--objecte log-->
+  <script>
+    let equips={
+      Locals:{
+        jugadors:[
+          //new Jugador("1-DANI ARTIZ"),
+          //new Jugador("2-MARC PEREZ"),
+          new Jugador("3-FATTY"),
+          //new Jugador("4-JUNQUERA"),
+          //new Jugador("15-GUARDIOLA"),
+          //new Jugador("4-JORDI GELI"),
+          new Jugador("5-FERRAGUT"),
+          new Jugador("7-NADAL"),
+          new Jugador("9-SIMA"),
+          new Jugador("10-PUJOLRÀS"),
+          new Jugador("11-BERNAT"),
+          new Jugador("14-JUANOLA"),
+          new Jugador("19-TETI"),
+          new Jugador("22-FIGUERAS"),
+          new Jugador("23-GRAU"),
+          new Jugador("24-CAPELL"),
+          new Jugador("27-BALLELL"),
+          //new Jugador("33-ROGER"),
+        ],
+      },
+      Visitants:{
+        jugadors:[
+          //LLIÇÀ
+          new Jugador("2-GERARD BOGUNYÀ"),
+          new Jugador("6-SERGIO NERIZ"),
+          new Jugador("7-EDUARD PARERA"),
+          new Jugador("8-XAVI GARCIA"),
+          new Jugador("9-ABU IBE"),
+          new Jugador("10-MARC RABASEDA"),
+          new Jugador("11-ALBERT MASLLORENS"),
+          new Jugador("12-EDUARD CILLAN"),
+          new Jugador("13-ADRIA CANDIL"),
+          new Jugador("14-ARNAU JAIME"),
+          new Jugador("17-SERGI PEREZ"),
+          new Jugador("21-JORDI SANS"),
+          new Jugador("22-DAVID POU"),
+          new Jugador("23-IVAN CASTRO"),
+          new Jugador("26-SERGI PINO"),
+          new Jugador("33-PRECIOUS OSAKPOLOR"),
+          new Jugador("41-RAFAEL GONZALEZ"),
+          new Jugador("45-SERGI LOPEZ"),
+          new Jugador("77-RAMON ESPUÑA"),
+
+        ],
+      },
+    };
+  </script>
+
+  <!--utils-->
+  <script>
+    let tirs=['t1','t2','t3'];
+    Array.prototype.suma=function(){return this.reduce((p,c)=>(p+c),0)};
+    //confirma al sortir
+    window.addEventListener('beforeunload',(event)=>{
+      return //debug
+      //cancel the event as stated by the standard
+      event.preventDefault();
+      //chrome requires returnValue to be set
+      event.returnValue='';
+    });
+  </script>
+
+  <!--
+    VUE JS development version: includes helpful console warnings
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    VUE JS production version: optimized for size and speed
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+  -->
+  <script src="vue"></script>
+</head><body>
+
+<!--equips i utils-->
+<div>
+  <!--app equips-->
+  <div>
+    <table id=app>
+      <tbody v-for="equip,key in equips" :id="key">
+        <tr>
+          <th>
+            <a :href="'#'+key">{{key.toUpperCase()}}</a>
+            ({{equip.jugadors.length}})
+            <button v-on:click="afegir_jugador(equip)" v-if="equip.jugadors.length<12" style=display:inline;width:5em>+jug</button>
+          </th>
+          <th><kbd>a</kbd> T1 <kbd>z</kbd>
+          <th><kbd>s</kbd> T2 <kbd>x</kbd>
+          <th><kbd>d</kbd> T3 <kbd>c</kbd>
+          <th>assist <kbd>e</kbd>
+          <th>pts
+          <th>faltes fetes <kbd>f</kbd>
+          <th>faltes reb.  <kbd>r</kbd>
+          <th>reb. def <kbd>i</kbd>
+          <th>reb. ofe <kbd>o</kbd>
+          <th>perd <kbd>p</kbd>
+          <th>recu <kbd>ñ</kbd>
+          <th>val
+        </tr>
+
+        <!--jugadors-->
+        <tr v-for="jugador,i in equip.jugadors"
+          :class="'jugador '+(jugador==jugador_seleccionat?'seleccionat':'')"
+          :jugador_menu_faltes_visible="jugador==jugador_menu_faltes_visible"
+          :jugador_menu_corregir_faltes_visible="jugador==jugador_menu_corregir_faltes_visible"
+          :jugador_menu_assistencies="jugador==jugador_menu_assistencies"
+          :jugador_menu_rebots_visible_t1="jugador==jugador_menu_rebots_visible.t1"
+          :jugador_menu_rebots_visible_t2="jugador==jugador_menu_rebots_visible.t2"
+          :jugador_menu_rebots_visible_t3="jugador==jugador_menu_rebots_visible.t3"
+          >
+
+          <!--nom jugador-->
+          <td class=nom>
+            <div class=nom_container>
+              <button
+                v-on:click="esborra_jugador(equip.jugadors,jugador)"
+                title="esborrar jugador/a"
+                style="background:blueviolet;color:white;width:2em;height:auto"
+                >X
+              </button>
+              <input class=nom v-model:text="jugador.nom" placeholder="nom jugador" maxlength=15 :tabindex="i+1+(key=='Visitants'?12:0)" onkeydown="event.stopPropagation()">
+            </div>
+          </td>
+
+          <!--tirs i punts-->
+          <td v-for="tir,i in tirs">
+            <div class=tirs>
+              <div class=compta>
+                <!--botó anotar tir-->
+                <button v-on:click="jugador.dins(tir);" class="comptar dins">+{{i+1}}</button>
+                <button v-on:click="jugador.corregir_dins(tir)" :disabled="jugador[tir].dins<=0">&circlearrowleft;</button>
+              </div>
+
+              <div class=punts :style="jugador[tir].intents==0?'color:#aaa':''">{{jugador[tir].dins}}/{{jugador[tir].intents}}</div>
+
+              <div class=corregir>
+                <!--botó fallar tir i seleccionar qui agafa el rebot-->
+                <div>
+                  <div v-if="jugador == jugador_menu_rebots_visible[tir]" class=menu_flotant>
+                    <div>{{jugador.nom}} falla [{{tir}}]. REBOT:</div>
+                    <!--btn sense rebot-->
+                    <button
+                      class=jugador_menu_flotant
+                      style=text-align:center
+                      @click="jugador.intent(tir);jugador_menu_rebots_visible[tir]=null;"
+                      >
+                        no rebot / no vist
+                        <kbd v-if="tir=='t1'">z</kbd>
+                        <kbd v-if="tir=='t2'">x</kbd>
+                        <kbd v-if="tir=='t3'">c</kbd>
+                    </button>
+                    <!--btns assignar rebots companys i rivals-->
+                    <div class=menu_rebots>
+                      <div>
+                        <button
+                          class=jugador_menu_flotant
+                          v-for="company in get_companys(jugador)"
+                          @click="jugador.intent(tir);company.afegir_rebot_ofe();jugador_seleccionat=company;jugador_menu_rebots_visible[tir]=null;"
+                          :seleccionat="jugador_seleccionat == company"
+                          >r.ofe: {{company.nom}}
+                        </button>
+                      </div>
+                      <div>
+                        <button
+                          class=jugador_menu_flotant
+                          v-for="rival in get_rivals(jugador)"
+                          @click="jugador.intent(tir);rival.afegir_rebot_def();jugador_seleccionat=rival;jugador_menu_rebots_visible[tir]=null;"
+                          :seleccionat="jugador_seleccionat == rival"
+                          >r.def: {{rival.nom}}
+                        </button>
+                      </div>
+                    </div>
+                    <!--btn cancelar tir-->
+                    <button v-on:click="jugador_menu_rebots_visible[tir]=null" class="comptar intent"
+                      >cancela <kbd>q</kbd>
+                    </button>
+                  </div>
+                  <button v-else v-on:click="jugador_menu_rebots_visible[tir]=jugador" class="comptar intent">+{{i+1}}&darr;</button>
+                </div>
+                <button v-on:click="jugador.corregir_intent(tir)" :disabled="jugador[tir].intents<=0 || jugador[tir].dins>=jugador[tir].intents">&circlearrowleft;</button>
+              </div>
+            </div>
+          </td>
+
+          <!--assistencies-->
+          <td>
+            <div class=altres>
+              <!--botó assistència i seleccionar qui anota punt-->
+              <div>
+                <div v-if="jugador == jugador_menu_assistencies" class=menu_flotant>
+                  <div>assistència de {{jugador.nom}} a:</div>
+                  <button
+                    v-on:click="jugador.afegir_assistencia();jugador_menu_assistencies=null"
+                    class=jugador_menu_flotant
+                    style="background:lightblue;text-align:center"
+                    >no vist <kbd>e</kbd>
+                  </button>
+                  <!--btns assignar assistència a company-->
+                  <div class=menu_assistencia>
+                    <div v-for="company in get_companys(jugador)" class=company_assistit>
+                      <button
+                        class=jugador_menu_flotant
+                        :seleccionat="jugador_seleccionat == company"
+                        @click="jugador.afegir_assistencia(company);company.dins('t2');jugador_menu_assistencies=null;"
+                        >+2
+                      </button>
+                      <button
+                        class=jugador_menu_flotant
+                        :seleccionat="jugador_seleccionat == company"
+                        @click="jugador.afegir_assistencia(company);company.dins('t3');jugador_menu_assistencies=null;"
+                        >+3
+                      </button>
+                      <div class=nom>{{company.nom}}</div>
+                    </div>
+                  </div>
+                  <button v-on:click="jugador_menu_assistencies=null" style=background:lightblue>cancela <kbd>q</kbd></button>
+                </div>
+                <button v-else v-on:click="jugador_menu_assistencies=jugador" style=background:lightblue>+a</button>
+              </div>
+              <div :style="jugador.assistencies==0?'color:#aaa':''">{{jugador.assistencies}}</div>
+              <button v-on:click="jugador.corregir_assistencia()" :disabled="jugador.assistencies==0">&circlearrowleft;</button>
+            </div>
+          </td>
+          <th :style="jugador.punts==0?'color:#aaa':''">{{jugador.punts}}
+
+          <!--faltes fetes-->
+          <td>
+            <div class=altres>
+              <!--menu seleccionar qui ha rebut la falta-->
+              <div>
+                <div v-if="jugador == jugador_menu_faltes_visible" class=menu_flotant>
+                  <div>falta [nº {{jugador.faltes.fetes+1}}] de {{jugador.nom}} a:</div>
+                  <button
+                    class=jugador_menu_flotant
+                    @click="jugador.afegir_falta();jugador_menu_faltes_visible=null"
+                    >no vist <kbd>f</kbd>
+                  </button>
+                  <button
+                    class=jugador_menu_flotant
+                    v-for="rival in get_rivals(jugador)"
+                    :seleccionat="jugador_seleccionat == rival"
+                    @click="jugador.afegir_falta(rival);jugador_seleccionat=rival;jugador_menu_faltes_visible=null;"
+                    >f &rarr; {{rival.nom}}
+                  </button>
+                  <button v-on:click="jugador_menu_faltes_visible=null" style=background:orange>cancela <kbd>q</kbd></button>
+                </div>
+                <button v-else v-on:click="jugador_menu_faltes_visible=jugador" style=background:orange>+f</button>
+              </div>
+
+              <!--indicador faltes fetes-->
+              <div :style="jugador.faltes.fetes==0?'color:#aaa':''">{{jugador.faltes.fetes}}</div>
+
+              <!--menu corregir faltes fetes-->
+              <div>
+                <div v-if="jugador == jugador_menu_corregir_faltes_visible" class=menu_flotant>
+                  <button v-on:click="jugador_menu_corregir_faltes_visible=null">&circlearrowleft;</button>
+                  <button
+                    class=jugador_menu_flotant
+                    @click="jugador.corregir_falta();jugador_menu_corregir_faltes_visible=null"
+                    >corregir f &rarr; [?]
+                  </button>
+                  <button
+                    class=jugador_menu_flotant
+                    v-for="rival in get_rivals_amb_faltes(jugador)"
+                    @click="jugador.corregir_falta(rival);jugador_menu_corregir_faltes_visible=null;"
+                    >corregir f &rarr; {{rival.nom}}
+                  </button>
+                </div>
+                <button v-else v-on:click="jugador_menu_corregir_faltes_visible=jugador" :disabled="jugador.faltes.fetes==0">&circlearrowleft;</button>
+              </div>
+            </div>
+          </td>
+
+          <!--faltes rebudes-->
+          <td>
+            <div class=altres>
+              <!--afegir falta rebuda-->
+              <button
+                @click="jugador.afegir_falta_rebuda();"
+                style=background:yellow
+                >+fr
+              </button>
+              <!--indicador faltes rebudes-->
+              <div :style="jugador.faltes.rebudes==0?'color:#aaa':''">{{jugador.faltes.rebudes}}</div>
+              <!--corregir falta rebuda-->
+              <button
+                :disabled="jugador.faltes.rebudes==0"
+                @click="jugador.corregir_falta_rebuda();"
+                >&circlearrowleft;
+              </button>
+            </div>
+          </td>
+
+          <!--rebots defensius-->
+          <td>
+            <div class=altres>
+              <button v-on:click="jugador.afegir_rebot_def()" style=background:lightgreen>+rd</button>
+              <div :style="jugador.rebots.defensius==0?'color:#aaa':''">{{jugador.rebots.defensius}}</div>
+              <button v-on:click="jugador.corregir_rebot_def()" :disabled="jugador.rebots.defensius==0">
+                &circlearrowleft;
+              </button>
+            </div>
+          </td>
+
+          <!--rebots ofensius-->
+          <td>
+            <div class=altres>
+              <button v-on:click="jugador.afegir_rebot_ofe()" style=background:lightgreen>+ro</button>
+              <div :style="jugador.rebots.ofensius==0?'color:#aaa':''">{{jugador.rebots.ofensius}}</div>
+              <button v-on:click="jugador.corregir_rebot_ofe()" :disabled="jugador.rebots.ofensius==0">
+                &circlearrowleft;
+              </button>
+            </div>
+          </td>
+
+          <!--perdudes-->
+          <td>
+            <div class=altres>
+              <button v-on:click="jugador.afegir_perduda()" style=background:red>+p</button>
+              <div :style="jugador.perdudes==0?'color:#aaa':''">{{jugador.perdudes}}</div>
+              <button v-on:click="jugador.corregir_perduda()" :disabled="jugador.perdudes==0">
+                &circlearrowleft;
+              </button>
+            </div>
+          </td>
+
+          <!--recuperades-->
+          <td>
+            <div class=altres>
+              <button v-on:click="jugador.afegir_recuperada()" style=background:yellowgreen>+r</button>
+              <div :style="jugador.recuperades==0?'color:#aaa':''">{{jugador.recuperades}}</div>
+              <button v-on:click="jugador.corregir_recuperada()" :disabled="jugador.recuperades==0">
+                &circlearrowleft;
+              </button>
+            </div>
+          </td>
+
+          <!--valoracio--><th :style="'color:'+(jugador.valoracio==0?'#aaa':(jugador.valoracio<0?'red':'green'))">{{jugador.valoracio}}
+        </tr>
+
+        <!--totals-->
+        <tr>
+          <th>Totals</th>
+          <th v-for="tir in tirs">{{equip.jugadors.map(j=>j[tir].dins).suma()}}/{{equip.jugadors.map(j=>j[tir].intents).suma()}}</th>
+          <th>{{equip.jugadors.map(j=>j.assistencies).suma()}}</th>
+          <td>{{equip.jugadors.map(j=>j.punts).suma()}}</th>
+          <th>{{equip.jugadors.map(j=>j.faltes.fetes).suma()}}</th>
+          <th>{{equip.jugadors.map(j=>j.faltes.rebudes).suma()}}</th>
+          <th>{{equip.jugadors.map(j=>j.rebots.defensius).suma()}}</th>
+          <th>{{equip.jugadors.map(j=>j.rebots.ofensius).suma()}}</th>
+          <th>{{equip.jugadors.map(j=>j.perdudes).suma()}}</th>
+          <th>{{equip.jugadors.map(j=>j.recuperades).suma()}}</th>
+          <th>{{equip.jugadors.map(j=>j.valoracio).suma()}}</th>
+        </tr>
+
+        <!--resultat periode i ultim log-->
+        <tr v-if="key=='Locals'">
+          <td colspan=5>
+            <div id=ultima_accio>
+              <div v-if="log.missatges.length">
+                <div style=text-align:left>
+                  [{{log.missatges[0].data.toLocaleTimeString()}}]
+                  "{{log.missatges[0].jugador.nom}}"
+                  {{log.missatges[0].text}}
+                </div>
+                <div v-if="log.missatges.length>1" style=text-align:left>
+                  [{{log.missatges[1].data.toLocaleTimeString()}}]
+                  "{{log.missatges[1].jugador.nom}}"
+                  {{log.missatges[1].text}}
+                </div>
+              </div>
+              <div v-else>&mdash;</div>
+            </div>
+          </td>
+          <td style="background:black;border-color:black;color:red;font-size:larger;">
+            {{ get_resultat() }}
+          </td>
+          <td colspan=6>
+            <div id=selecciona_periode style="margin:auto;text-align:left;padding-left:0.1em">
+              <!--periode-->
+              <span>
+                Període:
+                <label><input type=radio name=periode value=1 checked> 1</label>
+                <label><input type=radio name=periode value=2> 2</label>
+                <label><input type=radio name=periode value=3> 3</label>
+                <label><input type=radio name=periode value=4> 4</label>
+              </span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!--vue equips-->
+    <script>
+      let app=new Vue({
+        el:'#app',
+        data:{
+          equips: equips,
+          log: log,
+          tirs: tirs,
+          jugador_seleccionat: null,
+          jugador_menu_faltes_visible: null,
+          jugador_menu_corregir_faltes_visible: null,
+          jugador_menu_rebots_visible:{t1: null, t2: null, t3: null},
+          jugador_menu_assistencies: null,
+        },
+        methods:{
+          afegir_jugador(equip){
+            let n=equip.jugadors.length+1;
+            equip.jugadors.push(new Jugador(String(n)));
+          },
+          esborra_jugador(jugadors, jugador){
+            if(confirm(`Segur que vols esborrar el/la jugador/a "${jugador.nom}"?`)){
+              jugadors.splice(jugadors.indexOf(jugador),1);
+            }
+          },
+          get_resultat(){
+            let p1 = this.equips.Locals.jugadors.map(j=>j.punts).suma();
+            let p2 = this.equips.Visitants.jugadors.map(j=>j.punts).suma();
+            return `${p1}-${p2}`;
+          },
+
+          //ordenar jugadors
+          ordenar_jugadors(equip){
+            equip.jugadors.sort(this.compareFunction);
+          },
+          compareFunction(a,b){
+            return (parseInt(a.nom.split(" ")[0]) - parseInt(b.nom.split(" ")[0]));
+          },
+
+          //get array jugadors rivals de jugador
+          get_rivals(jugador){
+            let rivals = this.equips.Locals.jugadors.indexOf(jugador)+1 ? 'Visitants' : 'Locals';
+            return this.equips[rivals].jugadors;
+          },
+
+          //get jugadors rivals a qui el jugador ha fet falta
+          get_rivals_amb_faltes(jugador){
+            let rivals = log.missatges.filter(m=>(m.jugador==jugador && m.tipus=='falta' && m.jugador_objectiu)).map(m=>m.jugador_objectiu);
+            return rivals;
+          },
+
+          //get array jugadors companys de jugador
+          get_companys(jugador){
+            let rivals = this.equips.Locals.jugadors.indexOf(jugador)+1 ? 'Locals' : 'Visitants';
+            return this.equips[rivals].jugadors;
+          },
+        },
+      });
+    </script>
+  </div>
+
+  <!--utils (menú botons)-->
+  <ul id=utils>
+    <li>
+      <button onclick=ordenar_jugadors()>Ordena jugadors per dorsal</button>
+      <script>
+        function ordenar_jugadors(){
+          app.ordenar_jugadors(app.equips.Locals);
+          app.ordenar_jugadors(app.equips.Visitants);
+        }
+      </script>
+    </li>
+
+    <li>
+      <button onclick=invertir_local_visitant()>Invertir Local/Visitant</button>
+      <script>
+        function invertir_local_visitant(){
+          let temp = app.equips.Locals.jugadors;
+          app.equips.Locals.jugadors = app.equips.Visitants.jugadors;
+          app.equips.Visitants.jugadors = temp;
+        }
+      </script>
+    </li>
+
+    <li>
+      <input id=carregar_partit onchange="carregar_partit(event)" type=file style="display:none" accept=".json">
+      <button onclick="clicar_input_carregar_partit()">Carrega partit JSON</button>
+      <script>
+        function clicar_input_carregar_partit(){
+          document.querySelector('#carregar_partit').click();
+        }
+        function carregar_partit(event){
+          if(!confirm("Les dades actuals es perdran. Continuar?")) return;
+          let file = event.target.files[0];
+          let reader = new FileReader();
+          reader.onload=function(){
+            let saved_file=JSON.parse(reader.result);
+
+            //assigna classe "Jugador" als objectes llegits del json
+            Object.values(saved_file).forEach(equip=>{
+              //nou array
+              let nou_array_jugadors = [];
+              //recorre objectes llegits
+              equip.jugadors.forEach(jugador=>{
+                nou_array_jugadors.push(Jugador.from(jugador));
+              });
+              //sobreescriu array amb el nou array
+              equip.jugadors = nou_array_jugadors;
+            });
+
+            //sobreescriu objecte 'equips'
+            app.equips = saved_file;
+          }
+          try{
+            reader.readAsText(file);
+          }catch(e){alert(e)}
+        }
+      </script>
+    </li>
+
+    <li>
+      <button onclick="descarregar_partit()">Descarrega partit JSON</button>
+      <script>
+        function descarregar_partit(){
+          let txt=JSON.stringify(app.equips,null,2);
+          let arxiu="data:application/json;charset=utf-8,"+encodeURI(txt);
+          //crea un link i fes click
+          let a=document.createElement('a');
+          document.body.appendChild(a);
+          a.download='partit.json';
+          a.href=arxiu;
+          a.click();
+        }
+      </script>
+    </li>
+
+    <li><button onclick="log_vue.visible^=true">Log <kbd>l</kbd></button>
+    <li><button onclick=window.open('instruccions.html')>Instruccions</button>
+
+    <li>
+      <button onclick=pantalla_completa()>Pantalla completa</button>
+      <script>
+        function pantalla_completa(){
+          let b = document.body;
+          if(!(document.webkitCurrentFullScreenElement||document.fullScreenElement)){
+            if(b.webkitRequestFullscreen){ b.webkitRequestFullscreen();return;}
+            if(b.requestFullscreen){       b.requestFullscreen();return;}
+          }else{
+            if(document.webkitExitFullscreen){    document.webkitExitFullscreen();return;}
+            if(document.exitFullscreen){          document.exitFullscreen();return;}
+          }
+        }
+      </script>
+    </li>
+
+    <li>
+      <button onclick="reset_partit()">Reset partit</button>
+      <script>
+        function reset_partit(){
+          if(!confirm("S'esborraran totes les dades. Continuar?")) return;
+          app.equips.Locals.jugadors=[];
+          app.equips.Visitants.jugadors=[];
+          log_vue.log.missatges=[];
+        }
+      </script>
+    </li>
+
+    <li>
+      <button onclick="mode_report()">Mode report</button>
+      <script>
+        function mode_report(){
+          function t(el){el.style.display=(el.style.display=='none')?'':'none'} //toggle display none
+          document.querySelectorAll('kbd').forEach(el=>t(el));
+          document.querySelectorAll('#app button').forEach(el=>t(el));
+          document.querySelectorAll('#app div.compta').forEach(el=>t(el));
+          document.querySelectorAll('#app div.corregir').forEach(el=>t(el));
+          t(document.querySelector('#ultima_accio'));
+          t(document.querySelector('#selecciona_periode'));
+        }
+      </script>
+    </li>
+  </ul>
+</div>
+
+<!--log-->
+<div>
+  <!--log view-->
+  <div id=log v-if="visible">
+    <div>
+      <label>
+        <input v-model="twitter_activat" type=checkbox>
+        Retransmetre per Twitter: <b>{{twitter_activat ? "Sí":"No"}}</b>
+      </label>
+      <button @click="visible^=true" style=height:2em>ocultar (l)</button>
+    </div>
+    <b>Log</b>
+    <div v-if="log.missatges.length==0" style="color:#aaa">~buit</div>
+    <ul>
+      <li v-for="missatge in log.missatges" :style="equips.Locals.jugadors.indexOf(missatge.jugador)==-1 ? 'color:blue':''">
+        Q{{missatge.periode}}
+        [{{missatge.data.toLocaleTimeString()}}]
+        "{{missatge.jugador.nom}}"
+        {{missatge.text}}
+        ({{missatge.resultat}})
+      </li>
+    </ul>
+  </div>
+  <script>
+    let log_vue=new Vue({
+      el:'#log',
+      data:{
+        equips: equips,
+        log: log,
+        visible: false,
+        twitter_activat: false,
+      },
+    });
+  </script>
+  <!--log css--><style>
+    div#log {
+      background:white;
+      border-left:1px solid #ccc;
+      font-family:monospace;
+      height:100%;
+      opacity:0.95;
+      overflow-y:scroll;
+      padding-left:1px;
+      position:fixed;
+      right:0;
+      top:0;
+      width:65%;
+    }
+    #log ul {
+      padding:0;
+      margin:0;
+      list-style-type:none;
+    }
+  </style>
+</div>
+
+<!--teclat i cursor funcions-->
+<script src="teclat_i_cursor.js"></script>
