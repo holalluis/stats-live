@@ -23,9 +23,11 @@ let log={
 
     //tuiteja
     if(log_vue.twitter_activat){
-      tweet(`
-        Q${msg.periode} [${msg.jugador.nom}] ${msg.text} (${msg.resultat})
-      `);
+      if(['perduda','recuperada'].indexOf(tipus)==-1){
+        tweet(`
+          Q${msg.periode} [${msg.jugador.nom}] ${msg.text} (${msg.resultat})
+        `);
+      }
     }
 
     /*parlar a cada acció TBD*/

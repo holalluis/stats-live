@@ -12,49 +12,46 @@
     let equips={
       Locals:{
         jugadors:[
+          //SALT
           //new Jugador("1-DANI ARTIZ"),
           //new Jugador("2-MARC PEREZ"),
-          new Jugador("3-FATTY"),
-          //new Jugador("4-JUNQUERA"),
-          //new Jugador("15-GUARDIOLA"),
+          new Jugador("0-TAPHA FATTY"),
+          //new Jugador("4-GERARD JUNQUERA"),
+          //new Jugador("15-MARTI GUARDIOLA"),
           //new Jugador("4-JORDI GELI"),
-          new Jugador("5-FERRAGUT"),
-          new Jugador("7-NADAL"),
-          new Jugador("9-SIMA"),
-          new Jugador("10-PUJOLRÀS"),
-          new Jugador("11-BERNAT"),
-          new Jugador("14-JUANOLA"),
-          new Jugador("19-TETI"),
-          new Jugador("22-FIGUERAS"),
-          new Jugador("23-GRAU"),
-          new Jugador("24-CAPELL"),
-          new Jugador("27-BALLELL"),
-          //new Jugador("33-ROGER"),
+          //new Jugador("5-FRANCESC FERRAGUT"),
+          new Jugador("7-CARLES NADAL"),
+          new Jugador("9-LAMIN SIMA"),
+          new Jugador("10-ALBERT PUJOLRÀS"),
+          new Jugador("11-BERNAT PONS"),
+          new Jugador("14-MARC JUANOLA"),
+          //new Jugador("19-SERGI JURADO"),
+          //new Jugador("22-PAU FIGUERAS"),
+          new Jugador("23-MARC GRAU"),
+          new Jugador("24-MARC CAPELL"),
+          new Jugador("27-GERARD BALLELL"),
+          new Jugador("33-ROGER BALLELL"),
         ],
       },
       Visitants:{
         jugadors:[
-          //LLIÇÀ
-          new Jugador("2-GERARD BOGUNYÀ"),
-          new Jugador("6-SERGIO NERIZ"),
-          new Jugador("7-EDUARD PARERA"),
-          new Jugador("8-XAVI GARCIA"),
-          new Jugador("9-ABU IBE"),
-          new Jugador("10-MARC RABASEDA"),
-          new Jugador("11-ALBERT MASLLORENS"),
-          new Jugador("12-EDUARD CILLAN"),
-          new Jugador("13-ADRIA CANDIL"),
-          new Jugador("14-ARNAU JAIME"),
-          new Jugador("17-SERGI PEREZ"),
-          new Jugador("21-JORDI SANS"),
-          new Jugador("22-DAVID POU"),
-          new Jugador("23-IVAN CASTRO"),
-          new Jugador("26-SERGI PINO"),
-          new Jugador("33-PRECIOUS OSAKPOLOR"),
-          new Jugador("41-RAFAEL GONZALEZ"),
-          new Jugador("45-SERGI LOPEZ"),
-          new Jugador("77-RAMON ESPUÑA"),
-
+          //CEB GIRONA
+          new Jugador("2-POL RIGAT"),
+          new Jugador("3-MARC MARIN"),
+          new Jugador("5-FERRAN PAULI"),
+          new Jugador("7-ANIOL TORT"),
+          new Jugador("8-ALEJANDRO DE LA VEGA"),
+          new Jugador("9-ISAAC VALERA"),
+          new Jugador("10-ALBERT ALONSO"),
+          new Jugador("11-ADRIA REVILLA"),
+          new Jugador("12-EDUARD PANTRIGO"),
+          new Jugador("14-ENRIC ESPINOSA"),
+          new Jugador("15-ANTONI RODRIGUEZ"),
+          new Jugador("19-TONI ESPINOSA"),
+          new Jugador("21-DENIS JAY GODOY"),
+          new Jugador("33-ALBERT AGUSTI"),
+          new Jugador("76-IGNASI QUINTANA"),
+          new Jugador("88-PAU MARTIN"),
         ],
       },
     };
@@ -64,6 +61,7 @@
   <script>
     let tirs=['t1','t2','t3'];
     Array.prototype.suma=function(){return this.reduce((p,c)=>(p+c),0)};
+
     //confirma al sortir
     window.addEventListener('beforeunload',(event)=>{
       return //debug
