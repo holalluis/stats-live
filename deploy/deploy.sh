@@ -9,4 +9,4 @@ git commit -am 'update'
 # -P  mostra progrés
 # -vv incrementa verbositat
 # -r  actua recursivament
-rsync -hPvr . root@164.132.111.240:/var/www/html/stats-live
+rsync -hPvr -exclude="tweet/*" . root@164.132.111.240:/var/www/html/stats-live
