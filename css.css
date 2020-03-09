@@ -1,5 +1,6 @@
 /*general*/
   body{
+    font-family:Helvetica;
     margin:0;
   }
   div{
@@ -91,6 +92,8 @@
     }
     div.menu_flotant {
       position:absolute;
+      top:5px;
+      right:5px;
       background:white;
       box-shadow:3px 3px 20px black;
     }
@@ -145,9 +148,9 @@
     ul#utils button{
       height:3em;
       border-radius:5px;
+      background:#ccc;
     }
     kbd {
-      display: inline-block;
       margin: 0 .1em;
       padding: .1em .6em;
       font-family: monospace,Arial,"Helvetica Neue",Helvetica,sans-serif;
@@ -173,4 +176,10 @@
   div#selecciona_periode label:hover {
     background:#ccc;
     font-weight:bold;
+  }
+
+/*afegir jugador*/
+  button.afegir_jugador {
+    display:inline;
+    width:initial;
   }

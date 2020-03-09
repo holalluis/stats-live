@@ -46,7 +46,6 @@
           new Jugador("14-JOAN PAU PILAN"),
           new Jugador("15-RAFA GOMEZ"),
           new Jugador("20-ORIOL RUIZ"),
-          new Jugador("20-DAVID ROA"),
           new Jugador("27-IGNASI ISERN"),
           new Jugador("43-DAVID AYUSO"),
         ],
@@ -85,9 +84,8 @@
       <tbody v-for="equip,key in equips" :id="key">
         <tr>
           <th>
-            {{key.toUpperCase()}}
-            ({{equip.jugadors.length}})
-            <button v-on:click="afegir_jugador(equip)" v-if="equip.jugadors.length<12" style="display:inline;width:2em;font-size:large;">+</button>
+            {{key.toUpperCase()}} ({{equip.jugadors.length}})
+            <button v-on:click="afegir_jugador(equip)" v-if="equip.jugadors.length<12" class=afegir_jugador>+</button>
           </th>
           <th><kbd>a</kbd> T1 <kbd>z</kbd>
           <th><kbd>s</kbd> T2 <kbd>x</kbd>
@@ -162,7 +160,7 @@
                           v-for="company in get_companys(jugador)"
                           @click="jugador.intent(tir);company.afegir_rebot_ofe();jugador_seleccionat=company;jugador_menu_rebots_visible[tir]=null;"
                           :seleccionat="jugador_seleccionat == company"
-                          >r.ofe: {{company.nom}}
+                          >{{company.nom}}
                         </button>
                       </div>
                       <div>
@@ -171,7 +169,7 @@
                           v-for="rival in get_rivals(jugador)"
                           @click="jugador.intent(tir);rival.afegir_rebot_def();jugador_seleccionat=rival;jugador_menu_rebots_visible[tir]=null;"
                           :seleccionat="jugador_seleccionat == rival"
-                          >r.def: {{rival.nom}}
+                          >{{rival.nom}}
                         </button>
                       </div>
                     </div>
@@ -420,11 +418,12 @@
         },
         methods:{
           afegir_jugador(equip){
-            let n=equip.jugadors.length+1;
-            equip.jugadors.push(new Jugador(String(n)));
+            let nou_jugador = new Jugador("NOU JUGADOR");
+            equip.jugadors.push(nou_jugador);
+            this.jugador_seleccionat = nou_jugador;
           },
           esborra_jugador(jugadors, jugador){
-            if(confirm(`Segur que vols esborrar el/la jugador/a "${jugador.nom}"?`)){
+            if(confirm(`Segur que vols esborrar el jugador "${jugador.nom}"?`)){
               jugadors.splice(jugadors.indexOf(jugador),1);
             }
           },
@@ -539,42 +538,15 @@
       </script>
     </li>
 
-    <li><button onclick="log_vue.visible^=true">Log <kbd>l</kbd></button>
     <li><button onclick=window.open('instruccions.html')>Instruccions</button>
-
-    <li>
-      <button onclick=pantalla_completa()>Pantalla completa</button>
-      <script>
-        function pantalla_completa(){
-          let b = document.body;
-          if(!(document.webkitCurrentFullScreenElement||document.fullScreenElement)){
-            if(b.webkitRequestFullscreen){ b.webkitRequestFullscreen();return;}
-            if(b.requestFullscreen){       b.requestFullscreen();return;}
-          }else{
-            if(document.webkitExitFullscreen){    document.webkitExitFullscreen();return;}
-            if(document.exitFullscreen){          document.exitFullscreen();return;}
-          }
-        }
-      </script>
-    </li>
-
-    <li>
-      <button onclick="reset_partit()">Reset partit</button>
-      <script>
-        function reset_partit(){
-          if(!confirm("S'esborraran totes les dades. Continuar?")) return;
-          app.equips.Locals.jugadors=[];
-          app.equips.Visitants.jugadors=[];
-          log_vue.log.missatges=[];
-        }
-      </script>
-    </li>
 
     <li>
       <button onclick="mode_report()">Mode report</button>
       <script>
+        let mode_report_enabled=false;
         function mode_report(){
-          function t(el){el.style.display=(el.style.display=='none')?'':'none'} //toggle display none
+          mode_report_enabled ^= true;
+          function t(el){el.style.display= mode_report_enabled ?'none':''}
           document.querySelectorAll('kbd').forEach(el=>t(el));
           document.querySelectorAll('#app button').forEach(el=>t(el));
           document.querySelectorAll('#app div.compta').forEach(el=>t(el));
@@ -584,6 +556,19 @@
         }
       </script>
     </li>
+
+    <li>
+      <button onclick=mostra_oculta_tecles()>Mostra/oculta tecles</button>
+      <script>
+        function mostra_oculta_tecles(){
+          let kbds = document.querySelectorAll('kbd');
+          kbds.forEach(el=>{
+            el.style.display = el.style.display=='none' ? '':'none';
+          });
+        }
+      </script>
+    </li>
+
   </ul>
 </div>
 
@@ -645,3 +630,8 @@
 
 <!--teclat i cursor funcions-->
 <script src="teclat_i_cursor.js"></script>
+
+<script>
+  //oculta kbd
+  document.querySelectorAll('kbd').forEach(el=>{el.style.display='none';});
+</script>
