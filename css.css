@@ -3,7 +3,9 @@
     margin:0;
   }
   div{
+    /*
     background:white; /*per pantalla completa, sinó surt negre*/
+    */
   }
   th{
     background:#eee;
@@ -162,14 +164,13 @@
 
 /*parcials*/
   div#selecciona_periode label{
+    background:#ddd;
     text-align:center;
-    border-right:1px solid #ccc;
+  }
+  div#selecciona_periode label:not(:last-child){
+    border-right:1px solid #666;
   }
   div#selecciona_periode label:hover {
-    background:#ccc;
-    font-weight:bold;
-  }
-  div#selecciona_periode label:hover div {
     background:#ccc;
     font-weight:bold;
   }

@@ -174,6 +174,14 @@ function busca_jugador(key){
   let js = app.jugador_seleccionat || false; //jugador seleccionat actual
   let jugadors = app.equips.Locals.jugadors.concat(app.equips.Visitants.jugadors);
   let index = js ? jugadors.indexOf(js) : 0; //index inicial on buscar
+
+  //en faltes, només busca jugadors de l'equip contrari
+  if(app.jugador_menu_faltes_visible && js){
+    let equip = app.equips.Locals.jugadors.indexOf(js)+1 ? "Visitants" : "Locals";
+    jugadors = app.equips[equip].jugadors;
+    index = 0;
+  }
+
   //cerca
   for(let i=index;i<jugadors.length;i++){
     let ji=jugadors[i];

@@ -13,11 +13,10 @@
       Locals:{
         jugadors:[
           //SALT
+          //new Jugador("0-TAPHA FATTY"),
           //new Jugador("1-DANI ARTIZ"),
           //new Jugador("2-MARC PEREZ"),
-          //new Jugador("0-TAPHA FATTY"),
           //new Jugador("4-GERARD JUNQUERA"),
-          //new Jugador("15-MARTI GUARDIOLA"),
           //new Jugador("5-FRANCESC FERRAGUT"),
           new Jugador("6-JORDI GELI"),
           new Jugador("7-CARLES NADAL"),
@@ -25,6 +24,7 @@
           new Jugador("10-ALBERT PUJOLRÀS"),
           new Jugador("11-BERNAT PONS"),
           new Jugador("14-MARC JUANOLA"),
+          //new Jugador("15-MARTI GUARDIOLA"),
           new Jugador("19-SERGI JURADO"),
           new Jugador("22-PAU FIGUERAS"),
           new Jugador("23-MARC GRAU"),
@@ -35,20 +35,20 @@
       },
       Visitants:{
         jugadors:[
-          //GRANOLLERS
-          new Jugador("0-CARLES HOMS"),
-          new Jugador("1-RICARDO BALTA"),
-          new Jugador("5-GUILLERMO BALTA"),
-          new Jugador("7-XAVIER SERRA NINOU"),
-          //new Jugador("9-GERARD VIÑALLONGA BLANCO"),
-          new Jugador("10-JORDI FARRANDO GONZALEZ"),
-          new Jugador("11-ALBERT GRISO SOLA"),
-          new Jugador("13-DAVID MARTINEZ ALÀS"),
-          new Jugador("14-MARC SUBIRACHS PUJADAS"),
-          new Jugador("15-ESTEBAN FELEZ MARTINEZ"),
-          new Jugador("23-MARC SALMERON SEGU"),
-          new Jugador("25-MOHAMADOU LAMINE DIOP"),
-          new Jugador("33-SEIKHOU KONTE SYLLA"),
+          //UE HORTA
+          new Jugador("2-ALFONS PILAN"),
+          new Jugador("5-FRANCESC AUSIO"),
+          new Jugador("6-MARTI GOMEZ"),
+          new Jugador("8-PAU FERRAGUT"),
+          new Jugador("9-POL MARTINEZ"),
+          new Jugador("11-ALBERT VILLALAIN"),
+          new Jugador("12-QUIM SANCHEZ"),
+          new Jugador("14-JOAN PAU PILAN"),
+          new Jugador("15-RAFA GOMEZ"),
+          new Jugador("20-ORIOL RUIZ"),
+          new Jugador("20-DAVID ROA"),
+          new Jugador("27-IGNASI ISERN"),
+          new Jugador("43-DAVID AYUSO"),
         ],
       },
     };
@@ -85,16 +85,16 @@
       <tbody v-for="equip,key in equips" :id="key">
         <tr>
           <th>
-            <a :href="'#'+key">{{key.toUpperCase()}}</a>
+            {{key.toUpperCase()}}
             ({{equip.jugadors.length}})
-            <button v-on:click="afegir_jugador(equip)" v-if="equip.jugadors.length<12" style=display:inline;width:5em>+jug</button>
+            <button v-on:click="afegir_jugador(equip)" v-if="equip.jugadors.length<12" style="display:inline;width:2em;font-size:large;">+</button>
           </th>
           <th><kbd>a</kbd> T1 <kbd>z</kbd>
           <th><kbd>s</kbd> T2 <kbd>x</kbd>
           <th><kbd>d</kbd> T3 <kbd>c</kbd>
           <th>assist <kbd>e</kbd>
           <th>pts
-          <th>faltes fetes <kbd>f</kbd>
+          <th>faltes <kbd>f</kbd>
           <th>faltes reb.  <kbd>r</kbd>
           <th>reb. def <kbd>i</kbd>
           <th>reb. ofe <kbd>o</kbd>
@@ -384,8 +384,8 @@
             <div id=selecciona_periode style="margin:auto;text-align:left;padding-left:0.1em">
               <!--periode-->
               <div style="display:grid;grid-template-columns:25% 25% 25% 25%">
-                <label v-for="periode,i in periodes">
-                  <input type=radio name=periode :value="periode" checked> Q{{periode}}
+                <label v-for="p,i in periodes" :style="p==periode ? 'font-weight:bold;color:black':''">
+                  <input type=radio name=periode :value="p" v-model.number="periode"> Q{{p}}
                   <div style=font-size:smaller>
                     Parcial:
                     {{equips.Locals.parcials[i].punts}}-{{equips.Visitants.parcials[i].punts}}
@@ -415,6 +415,7 @@
           jugador_menu_corregir_faltes_visible: null,
           jugador_menu_rebots_visible:{t1: null, t2: null, t3: null},
           jugador_menu_assistencies: null,
+          periode:1,
           periodes:[1,2,3,4],
         },
         methods:{
@@ -579,7 +580,7 @@
           document.querySelectorAll('#app div.compta').forEach(el=>t(el));
           document.querySelectorAll('#app div.corregir').forEach(el=>t(el));
           t(document.querySelector('#ultima_accio'));
-          t(document.querySelector('#selecciona_periode'));
+          //t(document.querySelector('#selecciona_periode'));
         }
       </script>
     </li>
@@ -595,7 +596,7 @@
         <input v-model="twitter_activat" type=checkbox>
         Retransmetre per Twitter: <b>{{twitter_activat ? "Sí":"No"}}</b>
       </label>
-      <button @click="visible^=true" style=height:2em>ocultar (l)</button>
+      <button @click="visible^=true" style=height:2em>ocultar <kbd>l</kbd></button>
     </div>
     <b>Log</b>
     <div v-if="log.missatges.length==0" style="color:#aaa">~buit</div>
