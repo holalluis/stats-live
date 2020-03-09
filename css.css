@@ -159,3 +159,17 @@
       box-shadow: 0 1px 0 rgba(12,13,14,0.2), 0 0 0 2px #FFF inset;
       white-space: nowrap;
     }
+
+/*parcials*/
+  div#selecciona_periode label{
+    text-align:center;
+    border-right:1px solid #ccc;
+  }
+  div#selecciona_periode label:hover {
+    background:#ccc;
+    font-weight:bold;
+  }
+  div#selecciona_periode label:hover div {
+    background:#ccc;
+    font-weight:bold;
+  }

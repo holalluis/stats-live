@@ -15,47 +15,45 @@
           //SALT
           //new Jugador("1-DANI ARTIZ"),
           //new Jugador("2-MARC PEREZ"),
-          new Jugador("0-TAPHA FATTY"),
+          //new Jugador("0-TAPHA FATTY"),
           //new Jugador("4-GERARD JUNQUERA"),
           //new Jugador("15-MARTI GUARDIOLA"),
-          //new Jugador("4-JORDI GELI"),
           //new Jugador("5-FRANCESC FERRAGUT"),
+          new Jugador("6-JORDI GELI"),
           new Jugador("7-CARLES NADAL"),
           new Jugador("9-LAMIN SIMA"),
           new Jugador("10-ALBERT PUJOLRÀS"),
           new Jugador("11-BERNAT PONS"),
           new Jugador("14-MARC JUANOLA"),
-          //new Jugador("19-SERGI JURADO"),
-          //new Jugador("22-PAU FIGUERAS"),
+          new Jugador("19-SERGI JURADO"),
+          new Jugador("22-PAU FIGUERAS"),
           new Jugador("23-MARC GRAU"),
-          new Jugador("24-MARC CAPELL"),
+          //new Jugador("24-MARC CAPELL"),
           new Jugador("27-GERARD BALLELL"),
           new Jugador("33-ROGER BALLELL"),
         ],
       },
       Visitants:{
         jugadors:[
-          //CEB GIRONA
-          new Jugador("2-POL RIGAT"),
-          new Jugador("3-MARC MARIN"),
-          new Jugador("5-FERRAN PAULI"),
-          new Jugador("7-ANIOL TORT"),
-          new Jugador("8-ALEJANDRO DE LA VEGA"),
-          new Jugador("9-ISAAC VALERA"),
-          new Jugador("10-ALBERT ALONSO"),
-          new Jugador("11-ADRIA REVILLA"),
-          new Jugador("12-EDUARD PANTRIGO"),
-          new Jugador("14-ENRIC ESPINOSA"),
-          new Jugador("15-ANTONI RODRIGUEZ"),
-          new Jugador("19-TONI ESPINOSA"),
-          new Jugador("21-DENIS JAY GODOY"),
-          new Jugador("33-ALBERT AGUSTI"),
-          new Jugador("76-IGNASI QUINTANA"),
-          new Jugador("88-PAU MARTIN"),
+          //GRANOLLERS
+          new Jugador("0-CARLES HOMS"),
+          new Jugador("1-RICARDO BALTA"),
+          new Jugador("5-GUILLERMO BALTA"),
+          new Jugador("7-XAVIER SERRA NINOU"),
+          //new Jugador("9-GERARD VIÑALLONGA BLANCO"),
+          new Jugador("10-JORDI FARRANDO GONZALEZ"),
+          new Jugador("11-ALBERT GRISO SOLA"),
+          new Jugador("13-DAVID MARTINEZ ALÀS"),
+          new Jugador("14-MARC SUBIRACHS PUJADAS"),
+          new Jugador("15-ESTEBAN FELEZ MARTINEZ"),
+          new Jugador("23-MARC SALMERON SEGU"),
+          new Jugador("25-MOHAMADOU LAMINE DIOP"),
+          new Jugador("33-SEIKHOU KONTE SYLLA"),
         ],
       },
     };
   </script>
+  <script src="parcials.js"></script><!--expandeix objecte equips-->
 
   <!--utils-->
   <script>
@@ -80,10 +78,8 @@
   -->
   <script src="vue"></script>
 </head><body>
-
-<!--equips i utils-->
 <div>
-  <!--app equips-->
+  <!--app-->
   <div>
     <table id=app>
       <tbody v-for="equip,key in equips" :id="key">
@@ -382,17 +378,23 @@
             </div>
           </td>
           <td style="background:black;border-color:black;color:red;font-size:larger;">
-            {{ get_resultat() }}
+            {{get_resultat()}}
           </td>
           <td colspan=6>
             <div id=selecciona_periode style="margin:auto;text-align:left;padding-left:0.1em">
               <!--periode-->
-              <span>
-                Període:
-                <label><input type=radio name=periode value=1 checked> 1</label>
-                <label><input type=radio name=periode value=2> 2</label>
-                <label><input type=radio name=periode value=3> 3</label>
-                <label><input type=radio name=periode value=4> 4</label>
+              <div style="display:grid;grid-template-columns:25% 25% 25% 25%">
+                <label v-for="periode,i in periodes">
+                  <input type=radio name=periode :value="periode" checked> Q{{periode}}
+                  <div style=font-size:smaller>
+                    Parcial:
+                    {{equips.Locals.parcials[i].punts}}-{{equips.Visitants.parcials[i].punts}}
+                  </div>
+                  <div style=font-size:smaller>
+                    Faltes:
+                    {{equips.Locals.parcials[i].faltes}}-{{equips.Visitants.parcials[i].faltes}}
+                  </div>
+                </label>
               </span>
             </div>
           </td>
@@ -413,6 +415,7 @@
           jugador_menu_corregir_faltes_visible: null,
           jugador_menu_rebots_visible:{t1: null, t2: null, t3: null},
           jugador_menu_assistencies: null,
+          periodes:[1,2,3,4],
         },
         methods:{
           afegir_jugador(equip){
@@ -476,9 +479,9 @@
       <button onclick=invertir_local_visitant()>Invertir Local/Visitant</button>
       <script>
         function invertir_local_visitant(){
-          let temp = app.equips.Locals.jugadors;
-          app.equips.Locals.jugadors = app.equips.Visitants.jugadors;
-          app.equips.Visitants.jugadors = temp;
+          let temp = app.equips.Locals;
+          app.equips.Locals = app.equips.Visitants;
+          app.equips.Visitants = temp;
         }
       </script>
     </li>
@@ -610,9 +613,9 @@
     let log_vue=new Vue({
       el:'#log',
       data:{
-        equips: equips,
-        log: log,
-        visible: false,
+        equips:          equips,
+        log:             log,
+        visible:         false,
         twitter_activat: false,
       },
     });

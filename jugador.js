@@ -54,6 +54,9 @@ class Jugador{
     this[tir].dins++;
     this[tir].intents++;
     log.nou_missatge(`anota ${tir}`,this,tir);
+
+    //registra parcial
+    this.registra_parcial_tir(tir);
   }
   corregir_dins(tir){
     if(!this[tir]) return;
@@ -61,6 +64,28 @@ class Jugador{
     this[tir].dins--;
     this[tir].intents--;
     log.esborra_missatge(this,tir);
+
+    //corregeix parcial
+    this.registra_parcial_tir(tir,true);
+  }
+
+  //afegeix els punts al parcial
+  registra_parcial_tir(tir, corregir){
+    corregir = corregir||false;
+    let equip   = equips.Locals.jugadors.indexOf(this)+1 ? "Locals" : "Visitants";
+    let periode = parseInt(document.querySelector('input[name="periode"]:checked').value);
+    let punts   = tirs.indexOf(tir)+1;
+    if(corregir) punts *= -1;
+    equips[equip].parcials.find(p=>p.periode==periode).punts += punts;
+  }
+
+  //afegeix la falta al parcial
+  registra_parcial_falta(corregir){
+    corregir = corregir||false;
+    let equip = equips.Locals.jugadors.indexOf(this)+1 ? "Locals" : "Visitants";
+    let periode = parseInt(document.querySelector('input[name="periode"]:checked').value);
+    let faltes = corregir ? -1 : 1;
+    equips[equip].parcials.find(p=>p.periode==periode).faltes += faltes;
   }
 
   //suma i corregir faltes
@@ -71,6 +96,7 @@ class Jugador{
       return;
     }
     this.faltes.fetes++;
+    this.registra_parcial_falta();
     if(jugador_objectiu){
       jugador_objectiu.faltes.rebudes++;
       log.nou_missatge(`comet falta nº [${this.faltes.fetes}] a "${jugador_objectiu.nom}"`,this,'falta',jugador_objectiu);
@@ -80,7 +106,10 @@ class Jugador{
   }
   corregir_falta(jugador_objectiu){
     jugador_objectiu = jugador_objectiu || false;
-    if(this.faltes.fetes>0) this.faltes.fetes--;
+    if(this.faltes.fetes>0){
+      this.faltes.fetes--;
+      this.registra_parcial_falta(true);
+    }
 
     if(jugador_objectiu){
       jugador_objectiu.faltes.rebudes--;
