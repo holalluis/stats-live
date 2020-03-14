@@ -91,7 +91,7 @@
           <th><kbd>s</kbd> T2 <kbd>x</kbd>
           <th><kbd>d</kbd> T3 <kbd>c</kbd>
           <th>assist <kbd>e</kbd>
-          <th>pts
+          <th>punts
           <th>faltes <kbd>f</kbd>
           <th>faltes reb.  <kbd>r</kbd>
           <th>reb. def <kbd>i</kbd>
@@ -379,21 +379,18 @@
             {{get_resultat()}}
           </td>
           <td colspan=6>
-            <div id=selecciona_periode style="margin:auto;text-align:left;padding-left:0.1em">
-              <!--periode-->
-              <div style="display:grid;grid-template-columns:25% 25% 25% 25%">
-                <label v-for="p,i in periodes" :style="p==periode ? 'font-weight:bold;color:black':''">
-                  <input type=radio name=periode :value="p" v-model.number="periode"> Q{{p}}
-                  <div style=font-size:smaller>
-                    Parcial:
-                    {{equips.Locals.parcials[i].punts}}-{{equips.Visitants.parcials[i].punts}}
-                  </div>
-                  <div style=font-size:smaller>
-                    Faltes:
-                    {{equips.Locals.parcials[i].faltes}}-{{equips.Visitants.parcials[i].faltes}}
-                  </div>
-                </label>
-              </span>
+            <div id=selecciona_periode>
+              <label v-for="p,i in periodes" :style="p==periode ? 'font-weight:bold;color:black':''">
+                <input type=radio name=periode :value="p" v-model.number="periode"> Q{{p}}
+                <div style=font-size:smaller>
+                  Parcial:
+                  {{equips.Locals.parcials[i].punts}}-{{equips.Visitants.parcials[i].punts}}
+                </div>
+                <div style=font-size:smaller>
+                  Faltes:
+                  {{equips.Locals.parcials[i].faltes}}-{{equips.Visitants.parcials[i].faltes}}
+                </div>
+              </label>
             </div>
           </td>
         </tr>

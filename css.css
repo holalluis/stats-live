@@ -26,8 +26,11 @@
     width:100%;
     height:100%;
     border-radius:0;
-    border-width:1px;
+    border-width:0px;
     /*box-shadow:inset 0 0 3px #666;*/
+  }
+  button:hover {
+    font-weight:bold;
   }
 
 /*classes*/
@@ -148,7 +151,10 @@
     ul#utils button{
       height:3em;
       border-radius:5px;
-      background:#ccc;
+      background:#ddd;
+    }
+    ul#utils button:hover{
+      background:#eee;
     }
     kbd {
       margin: 0 .1em;
@@ -166,15 +172,19 @@
     }
 
 /*parcials*/
+  div#selecciona_periode {
+    display:grid;
+    grid-template-columns:25% 25% 25% 25%;
+  }
   div#selecciona_periode label{
-    background:#ddd;
+    /*background:#ddd;*/
     text-align:center;
   }
   div#selecciona_periode label:not(:last-child){
     border-right:1px solid #666;
   }
   div#selecciona_periode label:hover {
-    background:#ccc;
+    /*background:#ccc;*/
     font-weight:bold;
   }
 

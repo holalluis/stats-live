@@ -9,7 +9,7 @@ let log={
   nou_missatge:function(text, jugador, tipus, jugador_objectiu){
     jugador_objectiu = jugador_objectiu || false; //en cas de falta: jugador que rep la falta
     let resultat = app.get_resultat();
-    let periode = parseInt(document.querySelector('input[name="periode"]:checked').value);
+    let periode = app.periode;
     let msg={
       data:new Date(),
       periode,
@@ -34,6 +34,7 @@ let log={
     //speechSynthesis.speak(new SpeechSynthesisUtterance(jugador.nom+" "+text));
   },
 
+  //esborrar missatge del log, en cas de corregir acció
   esborra_missatge:function(jugador, tipus, jugador_objectiu){
     jugador_objectiu = jugador_objectiu || false; //en cas de falta: jugador que rep la falta
     let m = null; //missatge a esborrar

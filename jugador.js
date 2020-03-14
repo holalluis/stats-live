@@ -72,8 +72,8 @@ class Jugador{
   //afegeix els punts al parcial
   registra_parcial_tir(tir, corregir){
     corregir = corregir||false;
-    let equip   = equips.Locals.jugadors.indexOf(this)+1 ? "Locals" : "Visitants";
-    let periode = parseInt(document.querySelector('input[name="periode"]:checked').value);
+    let equip   = equips.Locals.jugadors.indexOf(this)+1 ? "Locals" : "Visitants"; //string
+    let periode = app.periode; //int
     let punts   = tirs.indexOf(tir)+1;
     if(corregir) punts *= -1;
     equips[equip].parcials.find(p=>p.periode==periode).punts += punts;
@@ -82,8 +82,8 @@ class Jugador{
   //afegeix la falta al parcial
   registra_parcial_falta(corregir){
     corregir = corregir||false;
-    let equip = equips.Locals.jugadors.indexOf(this)+1 ? "Locals" : "Visitants";
-    let periode = parseInt(document.querySelector('input[name="periode"]:checked').value);
+    let equip = equips.Locals.jugadors.indexOf(this)+1 ? "Locals" : "Visitants"; //string
+    let periode = app.periode; //int
     let faltes = corregir ? -1 : 1;
     equips[equip].parcials.find(p=>p.periode==periode).faltes += faltes;
   }
